@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+<link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+<title></title>
+<link rel='stylesheet' href='../css/style.css'>
+<link rel='stylesheet' href='../css/weather.css'>
+<link rel='stylesheet' href='../css/clock.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css'>
+<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.6/css/all.css'>
+
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons-wind.min.css'> 
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js'></script>
+<script>
+
+
+PACKAGES_PER_LINE = 6
+CCC_UTL = "http://localhost:8010/proxy/tv2/get-main-content/?uniqueID=RATRFDYZE&_=1567459735773";
+CCC_RELOAD_FREQUENCY_MS = "60000";
+
+SUB_URL = "http://localhost:8011/proxy/api/2/routeinfo?route_ids=A%2CC%2CE%2CB%2CD%2CF%2CM%2CG%2CJ%2CZ%2CL%2CN%2CQ%2CR%2CNewYorkSubwayW%2CFS%2CGS%2CH%2C1%2C2%2C3%2C4%2C5%2C6%2C6X%2C7%2C7X%2CSI%2CPATHHob33%2CPATHHobwtc%2CPATHJsq33%2CPATHJsqhob33%2CPATHNwkwtc&region_id=us-nyc&weekend=1&status_format=rich";
+SUB_RELOAD_FREQUENCY_MS = "60000"; 
+
+TRAFFIC_RELOAD_FREQUENCY_MS = "60000";
+
+WEATHER_URL = "http://localhost:8012/proxy/forecast/5e01e28b17e24def5645114f5fff1356/40.76589603,-74.02574648?&units=si"
+WEATHER_RELOAD_FREQUENCY_MS  = "600000"; /* Refresh once every 10 minutes - for total of 240 times per 24h. Please note, that exceeding 1000/24h is no
+                                            longer free service.  */
+
+
+/**
+ * A <template> is an HTML element which is allowed any other element type as a child. 
+ * The template has a .content property that you can access with JavaScript which points 
+ * to a DocumentFragment with the template's contents. This means that you can convert 
+ * a HTML string to DOM elements by setting the innerHTML of a <template> element, 
+ * then reaching into the template's .content property. 
+ *
+ * @param {String} HTML representing a single element
+ * @return {Element}
+ */
+ function htmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim(); // Never return a text node of whitespace as the result
+    template.innerHTML = html;
+    return template.content.firstChild;
+}
+
+/**
+ * A <template> is an HTML element which is allowed any other element type as a child. 
+ * The template has a .content property that you can access with JavaScript which points 
+ * to a DocumentFragment with the template's contents. This means that you can convert 
+ * a HTML string to DOM elements by setting the innerHTML of a <template> element, 
+ * then reaching into the template's .content property. 
+ *
+ * @param {String} HTML representing any number of sibling elements
+ * @return {NodeList} 
+ */
+ function htmlToElements(html) {
+    var template = document.createElement('template');
+    template.innerHTML = html;
+    return template.content.childNodes;
+}
+
+/**
+ * Adds the html string to the DOM.
+ *  
+ * @param {String} HTML representing any number of sibling elements
+ * 
+ */ 
+function addElementsToDom(html) {
+var div = htmlToElement(html);
+document.body.appendChild(div);
+} 
+
+function reloadIFrame() {
+    var iframe = document.getElementById('traffic');
+    iframe.src = iframe.src;
+    setTimeout(reloadIFrame, TRAFFIC_RELOAD_FREQUENCY_MS);
+    }
+
+
+function loadDoc() {
+    const Http = new XMLHttpRequest();
+    const url = CCC_UTL;
+
+    Http.open("GET", url);
+      Http.send();
+      Http.onreadystatechange = (e) => {
+        if (Http.readyState === 4 && Http.status === 200) {
+            var obj = JSON.parse(Http.responseText)
+            var divs = htmlToElements(obj.result);
+            var doc = new DOMParser().parseFromString(obj.result, "text/html")
+
+            /*Parse all annnouncements */
+            var html = "";
+            var objs = doc.getElementsByClassName("AnnouncementEventMainDiv")[0].getElementsByTagName("table");
+            for(var i=0;i<objs.length;i++) {
+                if (objs[i].getElementsByClassName("AnnouncementTitle")[0] != undefined) {
+                    var title = objs[i].getElementsByClassName("AnnouncementTitle")[0].innerHTML;
+                    var body = objs[i].getElementsByClassName("AnnouncementContent")[0].innerHTML;
+                    html = html + "<div class='item boxy'><div class='item_long_name'>"+title+"</div><div class='item_body'>"+body+"</div></div>";
+                    }
+                else {
+                    var title = objs[i].getElementsByClassName("EventTitle")[0].innerHTML;
+                    var body = objs[i].getElementsByClassName("EventContent")[0].innerHTML;
+                    var time = objs[i].getElementsByClassName("EventDateTime")[0].innerHTML;
+                    html = html + "<div class='item boxy'><div class='item_long_name'>"+title+"</div><div class='item_body'>"+body+"</div><div class='item_time'>"+time+"</div></div>";
+                    }
+                }
+
+            var params = {name: "events", title: 'Announcements', content: html, top: "7%", height: "92%", left:"31%"};
+            createTicker(params);
+
+            /* Parse all packages */    
+            var htmlA = "";
+            var htmlB = "";
+            var htmlC = "";
+            var tempA = "";
+            var tempB = "";
+            var tempC = "";
+            var counterA = 0;
+            var counterB = 0;
+            var counterC = 0;
+            var objs = doc.getElementsByClassName("PackagesDiv")[0].getElementsByTagName("table");
+            for(var j=0;j<objs.length;j++) {
+                for(var i=0;i<objs[j].rows.length;i++) {
+                    for(var k=0;k<objs[j].rows[i].cells.length;k++) {
+                        var t = objs[j].rows[i].cells[k].innerHTML.trim();
+                        if (t[0] == "A") {
+                            tempA = tempA + t + " ";
+                            counterA++;
+                            if(counterA%PACKAGES_PER_LINE == 0) {
+                                htmlA = htmlA + "<div class='item'><div class='item_name_packages'>"+tempA+"</div></div>";
+                                tempA = "";
+                                }
+                            }    
+                        else if (t[0] == "B") {
+                            tempB = tempB + t + " ";
+                            counterB++;
+                            if(counterB%PACKAGES_PER_LINE == 0) {
+                                htmlB = htmlB + "<div class='item'><div class='item_name_packages'>"+tempB+"</div></div>";
+                                tempB = "";
+                                }  
+                            }  
+                        else {
+                            tempC = tempC + t + " ";
+                            counterC++;
+                            if(counterC%PACKAGES_PER_LINE == 0) {
+                                htmlC = htmlC + "<div class='item'><div class='item_name_packages'>"+tempC+"</div></div>";
+                                tempC = "";
+                                }   
+                            }   
+                    }
+                }   
+            }
+            var params = {title: "Building A", name: "packages_A", content: htmlA, top: "7%", height: "30%", width: "25%", left:"3%"};
+            createTicker(params); 
+            var params = {title: "Building B", name: "packages_B", content: htmlB, top: "43%", height: "25%", width: "25%", left:"3%"};
+            createTicker(params);
+            var params = {title: "Building C", name: "packages_C", content: htmlC, top: "74%", height: "25%", width: "25%", left:"3%"};
+            createTicker(params);
+        }
+        }
+
+    setTimeout(loadDoc, CCC_RELOAD_FREQUENCY_MS);
+    }    
+
+
+
+function createTicker(params) {
+    if (document.getElementById("ticker_"+params.name) == undefined) {
+        var html = "";
+        
+        if (params.title != undefined) {
+            var cssAnimation = document.createElement('style');
+            cssAnimation.type = 'text/css';
+            addElementsToDom("<div class='"+params.name+"_tickerTitle tickerTitle'>"+params.title+"</div>");
+            var rules = "."+params.name+"_tickerTitle { position: absolute; left: "+params.left+"; right: "+params.right+"; top: "+(parseInt(params.top.substring(-1))-7)+"%; }";
+            rules = document.createTextNode(rules);
+            cssAnimation.appendChild(rules);
+            document.getElementsByTagName("head")[0].appendChild(cssAnimation);
+            }
+
+        html = html + '<div id="ticker_'+params.name+'" class="ticker columns blur '+params.name+'"><div id="list_'+params.name+'" class="slider slider_'+params.name+'"><div id="items_'+params.name+'" class="column"></div></div></div>';
+        addElementsToDom(html);
+        var items = document.getElementById('items_'+params.name);
+        var divs = htmlToElements(params.content);
+        while(divs.length > 0) { 
+            items.appendChild(divs[0]);
+        }
+
+        var cssAnimation = document.createElement('style');
+        cssAnimation.type = 'text/css';
+        var rules = "."+params.name+" { position: absolute; width: "+params.width+";left: "+params.left+"; right: "+params.right+"; top: "+params.top+"; overflow: hidden; height: "+params.height+"; }";
+        rules = rules + "\n" + ".slider_"+params.name+" { top: 0em; position: relative; box-sizing: border-box; animation: slider_"+params.name+" 30s linear infinite;  list-style-type: none; text-align: center; }";
+
+        rules = rules + "\n" + '@keyframes slider_'+params.name+' {'+
+        '0%   { transform: translate(0, 0%);}'+
+        '100% { transform: translate(0, -'+items.clientHeight+'px);  }'+
+        '}';
+        rules = document.createTextNode(rules);
+        cssAnimation.appendChild(rules);
+        document.getElementsByTagName("head")[0].appendChild(cssAnimation); 
+        }
+    else
+        {
+        var items = document.getElementById('items_'+params.name);
+        items.innerHTML = "";
+        var divs = htmlToElements(params.content);
+        while(divs.length > 0) {
+            items.appendChild(divs[0]);
+            }   
+        }
+
+    var list = document.getElementById('list_'+params.name);
+    var items = document.getElementById('items_'+params.name);
+    const animated = document.querySelector('.slider_subway');
+    
+    if (list.clientHeight > items.clientHeight ) {
+        list.style.animationPlayState = "paused";
+    }
+    else {
+        var id = "list_"+ params.name + "_clone";
+        var el = document.getElementById(id)
+        if (el !== null) {
+            el.remove();
+            }
+        var clone = items.cloneNode(true);
+        clone.id = id;
+        list.append(clone);   
+    }
+
+}
+
+
+function loadSubwayData() {
+    const Http = new XMLHttpRequest();
+    const url = SUB_URL;
+
+    Http.open("GET", url);
+      Http.send();
+      Http.onreadystatechange = (e) => {
+        if (Http.readyState === 4 && Http.status === 200) {
+            var obj = JSON.parse(Http.responseText);
+
+            var routes = new Object();
+            for (var i = 0; i < obj.routes.length; i++) {
+                var l = obj.routes[i].status.level;
+                if (routes[l] == undefined) {
+                    routes[l] = new Array();
+                }   
+                routes[l].push(obj.routes[i]);
+            }
+            var html = "";
+            for(var k = 2; k >= 1;k--) {
+                if (routes[k] != undefined) {
+                    for (var i = 0; i < routes[k].length; i++) {
+                        html = html + "<div class='item'><img src='img/routeicon-"+routes[k][i].icon_name+"-242x.png'><div class='item_name'>  "+routes[k][i].long_name+"</div><div class='status_"+k+"'>"+routes[k][i].status.summary+"</div></div>";
+                        }
+                    }
+                }
+
+                var params = {name: "subway", content: html, top: "640px", height: "35%", right: "30px", width: "550px"};
+                createTicker(params);
+            }
+        }
+    setTimeout(loadSubwayData, SUB_RELOAD_FREQUENCY_MS);
+    }  
+
+
+function loadWeather() {
+    const Http = new XMLHttpRequest();
+    const url = WEATHER_URL;
+
+    Http.open("GET", url);
+    Http.send();
+    Http.onreadystatechange = (e) => {
+        if (Http.readyState === 4 && Http.status === 200) { 
+            var data = JSON.parse(Http.responseText);  
+
+            var day=new Date();
+            var weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+            document.getElementById('tomorrowWeekday').innerHTML = weekday[(day.getDay() + 1)%7];
+            document.getElementById('afterTomorrowWeekday').innerHTML = weekday[(day.getDay() + 2)%7];
+            document.getElementById('afterAfterTomorrowWeekday').innerHTML = weekday[(day.getDay() + 3)%7];
+
+            var temp = data.currently.temperature;
+            var fahrenheit = (data.currently.temperature * 9 / 5 + 32).toFixed(1) + "&deg;F";
+            var celsius = data.currently.temperature.toFixed(1) + "&deg;C";
+            var description = data.currently.summary;
+            var icon = "wi wi-forecast-io-" + data.currently.icon;
+            var wind = " " + data.currently.windSpeed.toFixed(1) + " m/s ";
+            var humidity = " " + (data.currently.humidity * 100).toFixed(0) + " %";
+
+            document.getElementById("icon").innerHTML = "<i class=\"" + icon + "\">";
+            document.getElementById("fahrenheit").innerHTML =  fahrenheit;
+
+            var todayMaxTemp = (data.daily.data[0].temperatureMax * 9 / 5 + 32).toFixed(0);
+            var todayMinTemp = (data.daily.data[0].temperatureMin * 9 / 5 + 32).toFixed(0);
+            var todayIcon = "wi wi-forecast-io-" + data.daily.data[0].icon;
+            document.getElementById("todayF").innerHTML = "" + todayMinTemp + "&deg;/" + todayMaxTemp + "&deg;";
+            
+            var tomorrowMaxTemp = (data.daily.data[1].temperatureMax * 9 / 5 + 32).toFixed(0);
+            var tomorrowMinTemp = (data.daily.data[1].temperatureMin * 9 / 5 + 32).toFixed(0);
+            var tomorrowIcon = "wi wi-forecast-io-" + data.daily.data[1].icon;
+            document.getElementById("tomorrowF").innerHTML = "<br>" + tomorrowMinTemp + "&deg;/" + tomorrowMaxTemp + "&deg; <br> <i class=\"" + tomorrowIcon + "\" id=\"smallIcon\">";    
+            
+            var afterTomorrowMaxTemp = (data.daily.data[2].temperatureMax * 9 / 5 + 32).toFixed(0);
+            var afterTomorrowMinTemp = (data.daily.data[2].temperatureMin * 9 / 5 + 32).toFixed(0);
+            var afterTomorrowIcon = "wi wi-forecast-io-" + data.daily.data[2].icon;
+            document.getElementById("afterTomorrowF").innerHTML = "<br>" + afterTomorrowMinTemp + "&deg;/" + afterTomorrowMaxTemp + "&deg; <br> <i class=\"" + afterTomorrowIcon + "\" id=\"smallIcon\">";
+            
+            var afterAfterTomorrowMaxTemp = (data.daily.data[3].temperatureMax * 9 / 5 + 32).toFixed(0);
+            var afterAfterTomorrowMinTemp = (data.daily.data[3].temperatureMin * 9 / 5 + 32).toFixed(0);
+            var afterAfterTomorrowIcon = "wi wi-forecast-io-" + data.daily.data[3].icon;
+            document.getElementById("afterAfterTomorrowF").innerHTML = "<br>" + afterAfterTomorrowMinTemp + "&deg;/" + afterAfterTomorrowMaxTemp + "&deg; <br> <i class=\"" + afterAfterTomorrowIcon + "\" id=\"smallIcon\">";
+            }
+        }
+    setTimeout(loadWeather, WEATHER_RELOAD_FREQUENCY_MS);    
+    }
+
+var startTime = new Date(),
+// // get the starting positions of each hand (in seconds)
+startS = startTime.getSeconds(),
+startM = startTime.getMinutes() * 60 + startS,
+startH = startTime.getHours() % 12 * 3600 + startM;
+
+// compute the rotation amount relative to the starting time
+function refreshClock() {
+    var now = new Date(),
+    diff = timeDifference(startTime, now),
+    degS = (startS + diff) / 60 * 360,
+    degM = (startM + diff) / 3600 * 360,
+    degH = (startH + diff) / 43200 * 360;
+  
+    document.getElementById("hour").style.transform = "rotate("+degH+"deg)";
+    document.getElementById("minute").style.transform = "rotate("+degM+"deg)";
+    document.getElementById("second").style.transform = "rotate("+degS+"deg)";
+    
+    setTimeout(refreshClock, 1000); /* Refresh clock every second */
+    }
+
+// compute the time difference between two date objects (in seconds)
+function timeDifference(date1, date2) {
+  return Math.round(Math.abs(date2.getTime() - date1.getTime()) / 1000);
+}
+
+setTimeout(loadWeather, 1000);
+setTimeout(loadDoc, 1000);
+setTimeout(loadSubwayData, 1000);
+setTimeout(reloadIFrame, 1000);
+setTimeout(refreshClock, 1000); 
+
+</script>
+</head>
+<body translate="no">
+<!-- <div class="packagesTitle">Packages</div> -->
+<div class="moreDetails">For more subway details, please visit https://citymapper.com/nyc/status</div>
+
+<div class="mapDiv">
+    <iframe id="traffic" src="https://embed.waze.com/iframe?zoom=14&lat=40.764768&lon=-74.021446&ct=livemap" scrolling="no"
+        frameborder="0" height="100%" width="100%"></iframe>
+</div>
+
+<div id="weatherBox">
+<div class="clock">
+<div id="hour" class="hand hour"></div>
+<div id="minute" class="hand minute"></div>
+<div id="second" class="hand second"></div>
+</div>
+<div id = "weather">
+<div class="city-weather-temperature">
+<span class="celsius fahrenheit-btn "></span>
+<span id="fahrenheit" class="fahrenheit celsius-btn"></span>
+</div>
+<div class="city-weather-description">
+<span id="icon"></span><br>
+<span id="todayF"> </span>
+<!-- <span id="description"></span> -->
+</div>
+<div class="bottom">
+<div class="nav-info clearfix">
+<div class="add-info">
+<ul id="details">
+<li>
+<span id="todayC"> </span>
+<!-- <span id="todayF"> </span> -->
+</li>
+<li>
+<span id="tomorrowWeekday"> </span>    
+<span id="tomorrowC"> </span>
+<span id="tomorrowF"> </span>
+</li>
+<li>
+<span id="afterTomorrowWeekday"> </span>    
+<span id="afterTomorrowC"> </span>
+<span id="afterTomorrowF"> </span>
+</li>
+<li>
+<span id="afterAfterTomorrowWeekday"> </span>    
+<span id="afterAfterTomorrowC"> </span>
+<span id="afterAfterTomorrowF"> </span>
+</li>
+</ul>
+</div> 
+</div> 
+</div> 
+</div>
+</div>
+<img id="logo" src='img/logo.jpg'>
+</body>
+</html>

@@ -1,0 +1,169 @@
+#weatherBox {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  background-color: rgba(230, 236, 241, 0.5);
+  width: 550px;
+}
+
+
+#weather {
+    float: left; 
+    position: relative;
+    /* top: 5px;
+    right: 320px; */
+}
+
+.city {
+  padding: 50px 0 10px 0;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0;
+  width: 330px;
+  height: 460px;
+  background-size: cover;
+  border-radius: 3px;
+  position: relative;
+  -webkit-box-shadow: 2px 3px 7px 0px rgba(50, 50, 50, 0.8);
+  -moz-box-shadow: 2px 3px 7px 0px rgba(50, 50, 50, 0.8);
+  box-shadow: 2px 3px 7px 0px rgba(50, 50, 50, 0.8);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.city-title,
+.city-weather-temperature,
+.city-weather-description,
+.city-weather-icon {
+  position: relative;
+  left: 80px;
+  padding: 5px;
+  box-sizing: border-box;
+  font-family: 'Dosis', sans-serif;
+  font-weight: bold;
+  text-align: center;
+  color: #323D54;
+  margin: auto;
+  display: block;
+}
+
+.city-title {
+  font-size: 2.5em;
+  padding-top: 25px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(20, 24, 33, 0), rgba(20, 24, 33, 0.75), rgba(20, 24, 33, 0));
+  width: 60%;
+  margin-top: 15px;
+  margin-bottom: 0px;
+}
+
+.city-weather-temperature {
+  font-size: 2em;
+}
+
+.city-weather-description {
+  font-size: 1.2em;
+  width: 200px;
+  margin: auto;
+  text-align: center;
+}
+
+.content {
+  position: absolute;
+  bottom: 0px;
+  z-index: 9999;
+}
+
+.wi {
+  display: inline-block;
+  font-family: 'weathericons';
+  color: #323D54;
+  font-size: 2.5em;
+  line-height: 1.3em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#smallIcon {
+  font-size: 2em;
+  margin-top: 5px;
+}
+.add-info {
+  text-align: left;
+  font-family: 'Dosis', sans-serif;
+  font-weight: bold;
+  font-size: 1em;
+  color: #323D54;
+}
+
+.bottom {
+  position: relative;
+  left: 50px;
+  display: inline;  
+  width: 330px;
+  margin: 0;
+  top: 20px;
+  position: absolute;
+  bottom: 0px;
+  margin-left: 150px;
+  z-index: 9999;
+  padding-right: 10px;
+}
+
+.nav-info {
+  /* background: rgba(255, 255, 255, 0.4); */
+}
+
+ul {
+  margin-bottom: 0;
+  text-align:center;
+}
+
+#details {
+  display: flex;
+}
+
+ul {
+  justify-content:  space-between;
+  list-style-type: none;
+  padding: 0px 35px 0px 35px;
+  margin-top:-10px;
+}
+
+.date{
+  font-size: 0.8em;
+  font-family: 'Dosis', sans-serif;
+  font-weight: bold;
+  color: #323D54;
+  float: left;
+  margin: 8px 5px 2px 10px;
+}
+
+#forio{
+  font-size: 0.8em;
+  font-family: 'Dosis', sans-serif;
+  font-weight: bold;
+  color: #323D54;
+  float: right;
+  margin: 8px 5px 2px 10px;
+}
+#forio:hover {
+  font-size: 0.8em;
+  font-family: 'Dosis', sans-serif;
+  font-weight: bold;
+  color: #fff;
+  float: right;
+  margin: 8px 5px 2px 10px;
+  text-decoration: none;
+}
