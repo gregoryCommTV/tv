@@ -18,7 +18,7 @@
 
 
 PACKAGES_PER_LINE = 5
-CCC_UTL = "http://localhost:8010/proxy/tv2/get-main-content/?uniqueID=RATRFDYZE&_=1567459735773";
+CCC_UTL = "http://localhost:8010/proxy/tv2/get-main-content/?uniqueID=RATRFDYZE";
 CCC_RELOAD_FREQUENCY_MS = "60000";
 
 SUB_URL = "http://localhost:8011/proxy/api/2/routeinfo?route_ids=A%2CC%2CE%2CB%2CD%2CF%2CM%2CG%2CJ%2CZ%2CL%2CN%2CQ%2CR%2CNewYorkSubwayW%2CFS%2CGS%2CH%2C1%2C2%2C3%2C4%2C5%2C6%2C6X%2C7%2C7X%2CSI%2CPATHHob33%2CPATHHobwtc%2CPATHJsq33%2CPATHJsqhob33%2CPATHNwkwtc&region_id=us-nyc&weekend=1&status_format=rich";
@@ -80,7 +80,7 @@ function reloadIFrame() {
     iframe.src = iframe.src;
     setTimeout(reloadIFrame, TRAFFIC_RELOAD_FREQUENCY_MS);
     }
-
+   
 
 function loadDoc() {
     const Http = new XMLHttpRequest();
@@ -101,13 +101,13 @@ function loadDoc() {
                 if (objs[i].getElementsByClassName("AnnouncementTitle")[0] != undefined) {
                     var title = objs[i].getElementsByClassName("AnnouncementTitle")[0].innerHTML;
                     var body = objs[i].getElementsByClassName("AnnouncementContent")[0].innerHTML;
-                    html = html + "<div class='item boxy'><div class='item_long_name'>"+title+"</div><div class='item_body'>"+body+"</div></div>";
+                    html = html + "<div class='item'><div class='item_long_name'>"+title+"</div><div class='item_body'>"+body+"</div></div>";
                     }
                 else {
                     var title = objs[i].getElementsByClassName("EventTitle")[0].innerHTML;
                     var body = objs[i].getElementsByClassName("EventContent")[0].innerHTML;
                     var time = objs[i].getElementsByClassName("EventDateTime")[0].innerHTML;
-                    html = html + "<div class='item boxy'><div class='item_long_name'>"+title+"</div><div class='item_body'>"+body+"</div><div class='item_time'>"+time+"</div></div>";
+                    html = html + "<div class='item'><div class='item_long_name'>"+title+"</div><div class='item_body'>"+body+"</div><div class='item_time'>"+time+"</div></div>";
                     }
                 }
 
@@ -156,6 +156,7 @@ function loadDoc() {
                     }
                 }   
             }
+
             var params = {title: "Building A", name: "packages_A", content: htmlA, top: "7%", height: "30%", width: "25%", left:"3%"};
             createTicker(params); 
             var params = {title: "Building B", name: "packages_B", content: htmlB, top: "43%", height: "25%", width: "25%", left:"3%"};
@@ -195,7 +196,8 @@ function createTicker(params) {
         var cssAnimation = document.createElement('style');
         cssAnimation.type = 'text/css';
         var rules = "."+params.name+" { position: absolute; text-align: center; width: "+params.width+";left: "+params.left+"; right: "+params.right+"; top: "+params.top+"; overflow: hidden; height: "+params.height+"; }";
-        rules = rules + "\n" + ".slider_"+params.name+" { top: 0em; position: relative; box-sizing: border-box; animation: slider_"+params.name+" 30s linear infinite;  list-style-type: none; text-align: center; }";
+        rules = rules + "\n" + ".slider_"+params.name+" { top: 0em; position: relative; box-sizing: border-box; list-style-type: none; text-align: center; }";
+        //animation: slider_"+params.name+" 30s linear infinite; 
 
         rules = rules + "\n" + '@keyframes slider_'+params.name+' {'+
         '0%   { transform: translate(0, 0%);}'+
@@ -217,21 +219,23 @@ function createTicker(params) {
 
     var list = document.getElementById('list_'+params.name);
     var items = document.getElementById('items_'+params.name);
-    const animated = document.querySelector('.slider_subway');
     
+    var id = "list_"+ params.name + "_clone";
+    var el = document.getElementById(id)
+    if (el !== null) {
+        el.remove();
+        }    
+
     if (list.clientHeight > items.clientHeight ) {
-        list.style.animationPlayState = "paused";
-    }
+        list.style.animation = "";
+        }
     else {
-        var id = "list_"+ params.name + "_clone";
-        var el = document.getElementById(id)
-        if (el !== null) {
-            el.remove();
-            }
+        list.style.animation = "slider_"+params.name+" 30s linear infinite";
         var clone = items.cloneNode(true);
         clone.id = id;
+        clone.style.paddingTop = "10px";
         list.append(clone);   
-    }
+        }
 
 }
 
@@ -380,7 +384,6 @@ setTimeout(refreshClock, 1000);
 <div class="city-weather-description">
 <span id="icon"></span><br>
 <span id="todayF"> </span>
-<!-- <span id="description"></span> -->
 </div>
 <div class="bottom">
 <div class="nav-info clearfix">
@@ -388,7 +391,6 @@ setTimeout(refreshClock, 1000);
 <ul id="details">
 <li>
 <span id="todayC"> </span>
-<!-- <span id="todayF"> </span> -->
 </li>
 <li>
 <span id="tomorrowWeekday"> </span>    
