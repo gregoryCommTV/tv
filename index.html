@@ -17,7 +17,7 @@
 <script>
 
 
-PACKAGES_PER_LINE = 6
+PACKAGES_PER_LINE = 5
 CCC_UTL = "http://localhost:8010/proxy/tv2/get-main-content/?uniqueID=RATRFDYZE&_=1567459735773";
 CCC_RELOAD_FREQUENCY_MS = "60000";
 
@@ -111,7 +111,7 @@ function loadDoc() {
                     }
                 }
 
-            var params = {name: "events", title: 'Announcements', content: html, top: "7%", height: "92%", left:"31%"};
+            var params = {name: "events", title: 'Announcements', content: html, top: "7%", height: "92%", left:"31%", width: "37%"};
             createTicker(params);
 
             /* Parse all packages */    
@@ -194,7 +194,7 @@ function createTicker(params) {
 
         var cssAnimation = document.createElement('style');
         cssAnimation.type = 'text/css';
-        var rules = "."+params.name+" { position: absolute; width: "+params.width+";left: "+params.left+"; right: "+params.right+"; top: "+params.top+"; overflow: hidden; height: "+params.height+"; }";
+        var rules = "."+params.name+" { position: absolute; text-align: center; width: "+params.width+";left: "+params.left+"; right: "+params.right+"; top: "+params.top+"; overflow: hidden; height: "+params.height+"; }";
         rules = rules + "\n" + ".slider_"+params.name+" { top: 0em; position: relative; box-sizing: border-box; animation: slider_"+params.name+" 30s linear infinite;  list-style-type: none; text-align: center; }";
 
         rules = rules + "\n" + '@keyframes slider_'+params.name+' {'+
