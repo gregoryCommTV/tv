@@ -18,7 +18,8 @@
 
 
 PACKAGES_PER_LINE = 5
-CCC_UTL = "http://localhost:8010/proxy/tv2/get-main-content/?uniqueID=RATRFDYZE";
+http://condocontrolcentral.com/tv2/authorize-tv/?uniqueID=ratrfdyze&_=1569622731993
+CCC_UTL = "http://localhost:8010/proxy/tv2/get-main-content/?uniqueID=RATRFDYZE&_=1569622731993";
 CCC_RELOAD_FREQUENCY_MS = "60000";
 
 SUB_URL = "http://localhost:8011/proxy/api/2/routeinfo?route_ids=A%2CC%2CE%2CB%2CD%2CF%2CM%2CG%2CJ%2CZ%2CL%2CN%2CQ%2CR%2CNewYorkSubwayW%2CFS%2CGS%2CH%2C1%2C2%2C3%2C4%2C5%2C6%2C6X%2C7%2C7X%2CSI%2CPATHHob33%2CPATHHobwtc%2CPATHJsq33%2CPATHJsqhob33%2CPATHNwkwtc&region_id=us-nyc&weekend=1&status_format=rich";
@@ -156,6 +157,10 @@ function loadDoc() {
                     }
                 }   
             }
+
+            htmlA = htmlA + "<div class='item'><div class='item_name_packages'>"+tempA+"</div></div>";
+            htmlB = htmlB + "<div class='item'><div class='item_name_packages'>"+tempB+"</div></div>"; 
+            htmlC = htmlC + "<div class='item'><div class='item_name_packages'>"+tempC+"</div></div>";
 
             var params = {title: "Building A", name: "packages_A", content: htmlA, top: "7%", height: "30%", width: "25%", left:"3%"};
             createTicker(params); 
