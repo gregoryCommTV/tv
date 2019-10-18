@@ -1,5 +1,5 @@
 
-  .clock {
+  /* .clock {
     position: absolute;
     top: 50%;
     left: 20px;
@@ -41,4 +41,60 @@
   .second {
     height: 45%; top: 5%;
     left: 50%; width: 1px; margin-left: -0.5px;
-  }
+  } */
+
+
+
+.clock-case{
+  position:absolute;
+  top:21%;
+  left:5%;
+  width:125px;
+  height:125px;
+  margin-left:-20px;
+  margin-top:-20px;
+  /* background-color: rgba(32, 32, 32); */
+  border: 4px solid #323D54;
+  border-radius:50%;
+  transition:all .9s;
+  transform:scale(1);
+  z-index:999;
+  font-family: proxima, BloggerSans, sans-serif;
+}
+
+.hour{
+  position:absolute;
+  /* top:20px; */
+  left:50%;
+  width:100px;
+  text-align:center;
+  margin-left:-50px;
+  font-size:45px;
+  color:#323D54;
+  /* padding-bottom: 2px; */
+}
+
+.hour:after{
+  height:3px;
+  background-color:#323D54;
+  width:60px;
+  content:"";
+  position:absolute;
+  bottom:0;
+  left:0;
+  margin-left:20px;
+  margin-bottom:8px;
+  border-radius:3px;
+}
+
+.minutes{
+  position:absolute;
+  top:40%;
+  left:50%;
+  width:140px;
+  text-align:center;
+  margin-left:-70px;
+  margin-top:0px;
+  font-size:45px;
+  color:#323D54;
+}
