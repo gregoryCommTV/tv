@@ -13,6 +13,6 @@ cmd = ['lcp', '--proxyUrl', 'https://api.darksky.net', '--port', '8012']
 out = subprocess.Popen(cmd, cwd="./", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 print(cmd, out)
 
-cmd = ['python', '-m', 'http.server'] 
+cmd = ['python3', '-m', 'http.server'] 
 out = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 print(cmd, out)
