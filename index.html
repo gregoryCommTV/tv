@@ -18,8 +18,7 @@
 
 
 PACKAGES_PER_LINE = 5
-http://condocontrolcentral.com/tv2/authorize-tv/?uniqueID=ratrfdyze&_=1569622731993
-CCC_UTL = "http://localhost:8010/proxy/tv2/get-main-content/?uniqueID=RATRFDYZE&_=1569622731993";
+CCC_UTL = "http://localhost:8010/proxy/tv2/get-main-content/?uniqueID=RATRFDYZE";
 CCC_RELOAD_FREQUENCY_MS = "60000";
 
 SUB_URL = "http://localhost:8011/proxy/api/2/routeinfo?route_ids=A%2CC%2CE%2CB%2CD%2CF%2CM%2CG%2CJ%2CZ%2CL%2CN%2CQ%2CR%2CNewYorkSubwayW%2CFS%2CGS%2CH%2C1%2C2%2C3%2C4%2C5%2C6%2C6X%2C7%2C7X%2CSI%2CPATHHob33%2CPATHHobwtc%2CPATHJsq33%2CPATHJsqhob33%2CPATHNwkwtc&region_id=us-nyc&weekend=1&status_format=rich";
@@ -158,15 +157,11 @@ function loadDoc() {
                 }   
             }
 
-            htmlA = htmlA + "<div class='item'><div class='item_name_packages'>"+tempA+"</div></div>";
-            htmlB = htmlB + "<div class='item'><div class='item_name_packages'>"+tempB+"</div></div>"; 
-            htmlC = htmlC + "<div class='item'><div class='item_name_packages'>"+tempC+"</div></div>";
-
-            var params = {title: "Building A ("+counterA+")", name: "packages_A", count: counterA, content: htmlA, top: "7%", height: "30%", width: "25%", left:"3%"};
+            var params = {title: "Building A", name: "packages_A", content: htmlA, top: "7%", height: "30%", width: "25%", left:"3%"};
             createTicker(params); 
-            var params = {title: "Building B ("+counterB+")", name: "packages_B", count: counterB, content: htmlB, top: "43%", height: "25%", width: "25%", left:"3%"};
+            var params = {title: "Building B", name: "packages_B", content: htmlB, top: "43%", height: "25%", width: "25%", left:"3%"};
             createTicker(params);
-            var params = {title: "Building C ("+counterC+")", name: "packages_C", count: counterC, content: htmlC, top: "74%", height: "25%", width: "25%", left:"3%"};
+            var params = {title: "Building C", name: "packages_C", content: htmlC, top: "74%", height: "25%", width: "25%", left:"3%"};
             createTicker(params);
         }
         }
@@ -339,30 +334,50 @@ startM = startTime.getMinutes() * 60 + startS,
 startH = startTime.getHours() % 12 * 3600 + startM;
 
 // compute the rotation amount relative to the starting time
-function refreshClock() {
-    var now = new Date(),
-    diff = timeDifference(startTime, now),
-    degS = (startS + diff) / 60 * 360,
-    degM = (startM + diff) / 3600 * 360,
-    degH = (startH + diff) / 43200 * 360;
+// function refreshClock() {
+//     var now = new Date(),
+//     diff = timeDifference(startTime, now),
+//     degS = (startS + diff) / 60 * 360,
+//     degM = (startM + diff) / 3600 * 360,
+//     degH = (startH + diff) / 43200 * 360;
   
-    document.getElementById("hour").style.transform = "rotate("+degH+"deg)";
-    document.getElementById("minute").style.transform = "rotate("+degM+"deg)";
-    document.getElementById("second").style.transform = "rotate("+degS+"deg)";
+//     document.getElementById("hour").style.transform = "rotate("+degH+"deg)";
+//     document.getElementById("minute").style.transform = "rotate("+degM+"deg)";
+//     document.getElementById("second").style.transform = "rotate("+degS+"deg)";
     
-    setTimeout(refreshClock, 1000); /* Refresh clock every second */
-    }
+//     setTimeout(refreshClock, 1000); /* Refresh clock every second */
+//     }
 
 // compute the time difference between two date objects (in seconds)
 function timeDifference(date1, date2) {
   return Math.round(Math.abs(date2.getTime() - date1.getTime()) / 1000);
 }
 
+function clockFunctionality(){
+    var clockface= document.getElementById("clock-case");
+    var hour=document.getElementById("clock-case-hour");
+    var minutes=document.getElementById("clock-case-minutes");
+    var now=new Date();
+    
+    hour.innerHTML=now.getHours();
+    minutes.innerHTML=now.getMinutes();
+    
+    //var percent=(now.getSeconds()*100)/60;
+    // percent=100-percent;
+    
+    //seconds.style.top=percent+'%';
+    
+    setTimeout(clockFunctionality,1000);
+    };
+
+
+
 setTimeout(loadWeather, 1000);
 setTimeout(loadDoc, 1000);
 setTimeout(loadSubwayData, 1000);
 setTimeout(reloadIFrame, 1000);
-setTimeout(refreshClock, 1000); 
+// setTimeout(refreshClock, 1000); 
+setTimeout(clockFunctionality, 1000);
 
 </script>
 </head>
@@ -376,10 +391,14 @@ setTimeout(refreshClock, 1000);
 </div>
 
 <div id="weatherBox">
-<div class="clock">
+<!-- <div class="clock">
 <div id="hour" class="hand hour"></div>
 <div id="minute" class="hand minute"></div>
 <div id="second" class="hand second"></div>
+</div> -->
+<div id="clock-case" class="clock-case">
+    <div id="clock-case-hour" class="hour"></div>
+    <div id="clock-case-minutes" class="minutes"></div>
 </div>
 <div id = "weather">
 <div class="city-weather-temperature">
