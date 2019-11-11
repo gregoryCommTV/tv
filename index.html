@@ -156,6 +156,10 @@ function loadDoc() {
                     }
                 }   
             }
+            htmlA = htmlA + "<div class='item'><div class='item_name_packages'>"+tempA+"</div></div>";
+            htmlB = htmlB + "<div class='item'><div class='item_name_packages'>"+tempB+"</div></div>";
+            htmlC = htmlC + "<div class='item'><div class='item_name_packages'>"+tempC+"</div></div>";
+
 
             var params = {title: "Building A ("+counterA+")", name: "packages_A", content: htmlA, top: "7%", height: "30%", width: "25%", left:"3%"};
             createTicker(params); 
