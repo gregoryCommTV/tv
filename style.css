@@ -1,0 +1,246 @@
+/* html, body {
+  height: 100%;
+  background: url("img/Blurish.png") no-repeat center center fixed;
+  background-size: cover;
+  background: #e6ecf1;
+} */
+
+@import url('https://fonts.googleapis.com/css?family=Dosis');
+
+body {
+  background: url("/img/Blurish.png") no-repeat center center fixed;
+  background-size: cover;
+  height:100vh;
+}
+
+.ticker {
+  position: absolute;
+  /* background-color: rgba(230, 236, 241, 0.5); */
+  background-image: linear-gradient(180deg, rgba(222, 209, 182, 0.5), rgba(230, 236, 241, 0.5));
+}
+
+.ticker .button {
+  margin-bottom: 0px;
+}
+
+.ticker .item {
+  margin: 0 auto;
+  padding-bottom: 5px;
+  width: 100%;
+  font-family: proxima, BloggerSans, sans-serif;
+  padding: 3px;
+  border-radius: 0px;
+  border: none;
+  text-align: center;
+}
+
+
+.ticker .item_name {
+  font-size: 20px;  
+  display:inline-block;
+  padding-left: 10px;
+  vertical-align: middle;
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+  overflow: hidden;
+  width: 55%;
+  text-align: left;
+}
+
+.ticker .item_name_packages {
+  font-size: 25px;  
+  font-weight: bold;
+  display:inline-block;
+  padding-left: 0px;
+  vertical-align: middle;
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+
+.ticker .item_long_name {
+  font-size: 24px;
+  font-weight: bold;
+  color:#8d32a8;  
+  display:inline-block;
+  padding-left: 10px;
+  vertical-align: middle;
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+.ticker .item_time {
+  font-size: 14px;  
+  padding: 10px;
+  text-align: right;
+
+}
+
+.ticker .item_body {
+  font-size: 26px;
+  padding: 10px;
+  vertical-align: middle;
+  width: 100%;
+  text-align: justify;
+}
+
+.status_2 {
+  display:inline-block;
+  width: 40%;
+  font-size: 16px;
+  font-weight: bold;
+  color: #f00;
+  text-align: right;
+}
+
+.status_1 {
+  display:inline-block;
+  width:  40%;;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffcc00;
+  text-align: right;
+}
+
+.status_0 {
+  display:inline-block;
+  width:  40%;
+  font-size: 16px;
+  font-weight: bold;
+  color:  #00d1b2;
+  text-align: right;
+}
+
+.ticker .content small {
+  color: #00d1b2;
+}
+
+.ticker img {
+  border-radius: 30px;
+}
+
+.ticker .level-item {
+  padding-left: 10px;
+  color: #00d1b2;
+}
+
+.ticker input:focus {
+  border-color: #00d1b2;
+}
+
+.ticker .likes {
+  padding: 0 7.5px;
+}
+
+.ticker input {
+  font-weight: bold;
+}
+
+.ticker .tweets-move {
+  transition: transform 1s;
+}
+
+.ticker img {
+  vertical-align:middle;
+  height: 24px;
+  width: 24px;
+}
+
+.blur .slider {
+  margin: 0;
+  padding: 3px;
+  line-height: 1.5em;
+  text-align: center;
+  width: 100%;
+}
+
+.blur:before, .blur::before,
+.blur:after,  .blur::after {
+  left: 0;
+  z-index: 1;
+  content: '';
+  position: absolute;
+  width: 100%; 
+  height: 1em;
+  /* background-image: linear-gradient(180deg, rgba(230, 236, 241, 1), rgba(230, 236, 241, 0)); */
+}
+
+.blur:after, .blur::after {
+  bottom: 0;
+  transform: rotate(180deg);
+}
+
+.blur:before, .blur::before {
+  top: 0;
+}
+
+.mapDiv {
+  position: absolute;
+  top: 110px;
+  right: -30px;
+  border-radius: 0px;
+  clip:rect(100px,570px,800px,20px);
+}
+
+iframe {
+    width: 620px;
+    height: 500px;
+}
+
+.moreDetails {
+  padding: 5px;
+  width: 500px;
+  position:absolute; 
+  bottom: 15px; 
+  right: 35px;
+  font-family: proxima, BloggerSans, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: #ccc;
+}
+
+.packagesTitle {
+  position: absolute;
+  top: 30px;
+  left: 880px;
+  font-family: 'Dosis', sans-serif;
+  font-size: 30px;
+  text-align: center;
+  color: rgb(229, 233, 241);
+}
+
+.announcementTitle {
+  position: absolute;
+  top: 30px;
+  left: 40%;
+  font-family: 'Dosis', sans-serif;
+  font-size: 30px;
+  text-align: center;
+  color: rgb(229, 233, 241);
+}
+.tickerTitle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-family: 'Dosis', sans-serif;
+  font-size: 40px;
+  text-align: center;
+  color: rgb(229, 233, 241);
+  z-index: 30;
+}
+
+#logo {
+  position: absolute;
+  top: 96%;
+  left: 50%;
+  -webkit-transform: translate(-70%, -70%);
+  transform: translate(-70%, -70%);
+  border: solid 10px rgba(230, 236, 241, 0.7);
+  z-index: 30;
+}
