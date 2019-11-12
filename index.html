@@ -18,15 +18,15 @@
 
 
 PACKAGES_PER_LINE = 5
-CCC_UTL = "http://localhost:8010/proxy/tv2/get-main-content/?uniqueID=RATRFDYZE";
+CCC_URL = "http://127.0.0.1:5000/https://condocontrolcentral.com/tv2/get-main-content/?uniqueID=RATRFDYZE";
 CCC_RELOAD_FREQUENCY_MS = "60000";
 
-SUB_URL = "http://localhost:8011/proxy/api/2/routeinfo?route_ids=A%2CC%2CE%2CB%2CD%2CF%2CM%2CG%2CJ%2CZ%2CL%2CN%2CQ%2CR%2CNewYorkSubwayW%2CFS%2CGS%2CH%2C1%2C2%2C3%2C4%2C5%2C6%2C6X%2C7%2C7X%2CSI%2CPATHHob33%2CPATHHobwtc%2CPATHJsq33%2CPATHJsqhob33%2CPATHNwkwtc&region_id=us-nyc&weekend=1&status_format=rich";
+SUB_URL = "http://127.0.0.1:5000/https://citymapper.com/api/2/routeinfo?route_ids=A%2CC%2CE%2CB%2CD%2CF%2CM%2CG%2CJ%2CZ%2CL%2CN%2CQ%2CR%2CNewYorkSubwayW%2CFS%2CGS%2CH%2C1%2C2%2C3%2C4%2C5%2C6%2C6X%2C7%2C7X%2CSI%2CPATHHob33%2CPATHHobwtc%2CPATHJsq33%2CPATHJsqhob33%2CPATHNwkwtc&region_id=us-nyc&weekend=1&status_format=rich";
 SUB_RELOAD_FREQUENCY_MS = "60000"; 
 
 TRAFFIC_RELOAD_FREQUENCY_MS = "60000";
 
-WEATHER_URL = "http://localhost:8012/proxy/forecast/5e01e28b17e24def5645114f5fff1356/40.76589603,-74.02574648?&units=si"
+WEATHER_URL = "http://127.0.0.1:5000/https://api.darksky.net/forecast/5e01e28b17e24def5645114f5fff1356/40.76589603,-74.02574648?&units=si";
 WEATHER_RELOAD_FREQUENCY_MS  = "600000"; /* Refresh once every 10 minutes - for total of 240 times per 24h. Please note, that exceeding 1000/24h is no
                                             longer free service.  */
 
@@ -84,7 +84,7 @@ function reloadIFrame() {
 
 function loadDoc() {
     const Http = new XMLHttpRequest();
-    const url = CCC_UTL;
+    const url = CCC_URL;
 
     Http.open("GET", url);
       Http.send();
@@ -182,12 +182,12 @@ function createTicker(params) {
         if (params.title != undefined) {
             var cssAnimation = document.createElement('style');
             cssAnimation.type = 'text/css';
-            addElementsToDom("<div class='"+params.name+"_tickerTitle tickerTitle'>"+params.title+"</div>");
+            addElementsToDom("<div id='"+params.title+"_tickerTitle' class='"+params.name+"_tickerTitle tickerTitle'>"+params.title+"</div>");
             var rules = "."+params.name+"_tickerTitle { position: absolute; left: "+params.left+"; right: "+params.right+"; top: "+(parseInt(params.top.substring(-1))-7)+"%; }";
             rules = document.createTextNode(rules);
             cssAnimation.appendChild(rules);
             document.getElementsByTagName("head")[0].appendChild(cssAnimation);
-            }
+            }  
 
         html = html + '<div id="ticker_'+params.name+'" class="ticker columns blur '+params.name+'"><div id="list_'+params.name+'" class="slider slider_'+params.name+'"><div id="items_'+params.name+'" class="column"></div></div></div>';
         addElementsToDom(html);
@@ -256,11 +256,13 @@ function loadSubwayData() {
 
             var routes = new Object();
             for (var i = 0; i < obj.routes.length; i++) {
-                var l = obj.routes[i].status.level;
-                if (routes[l] == undefined) {
-                    routes[l] = new Array();
-                }   
-                routes[l].push(obj.routes[i]);
+                if (obj.routes[i].status != undefined) {
+                  var l = obj.routes[i].status.level;
+                  if (routes[l] == undefined) {
+                      routes[l] = new Array();
+                  }   
+                  routes[l].push(obj.routes[i]);
+                  }
             }
             var html = "";
             for(var k = 2; k >= 1;k--) {
