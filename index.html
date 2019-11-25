@@ -84,7 +84,7 @@ function reloadIFrame() {
 
 function loadDoc() {
     const Http = new XMLHttpRequest();
-    const url = CCC_URL;
+    const url = CCC_URL+"&temp="+(Math.floor(Math.random() * 1000000));
 
     Http.open("GET", url);
       Http.send();
@@ -246,7 +246,7 @@ function createTicker(params) {
 
 function loadSubwayData() {
     const Http = new XMLHttpRequest();
-    const url = SUB_URL;
+    const url = SUB_URL+"&temp="+(Math.floor(Math.random() * 1000000));
 
     Http.open("GET", url);
       Http.send();
@@ -283,7 +283,7 @@ function loadSubwayData() {
 
 function loadWeather() {
     const Http = new XMLHttpRequest();
-    const url = WEATHER_URL;
+    const url = WEATHER_URL+"&temp="+(Math.floor(Math.random() * 1000000));
 
     Http.open("GET", url);
     Http.send();
@@ -339,20 +339,6 @@ startS = startTime.getSeconds(),
 startM = startTime.getMinutes() * 60 + startS,
 startH = startTime.getHours() % 12 * 3600 + startM;
 
-// compute the rotation amount relative to the starting time
-// function refreshClock() {
-//     var now = new Date(),
-//     diff = timeDifference(startTime, now),
-//     degS = (startS + diff) / 60 * 360,
-//     degM = (startM + diff) / 3600 * 360,
-//     degH = (startH + diff) / 43200 * 360;
-  
-//     document.getElementById("hour").style.transform = "rotate("+degH+"deg)";
-//     document.getElementById("minute").style.transform = "rotate("+degM+"deg)";
-//     document.getElementById("second").style.transform = "rotate("+degS+"deg)";
-    
-//     setTimeout(refreshClock, 1000); /* Refresh clock every second */
-//     }
 
 // compute the time difference between two date objects (in seconds)
 function timeDifference(date1, date2) {
@@ -368,11 +354,6 @@ function clockFunctionality(){
     hour.innerHTML=now.getHours();
     minutes.innerHTML=now.getMinutes();
     
-    //var percent=(now.getSeconds()*100)/60;
-    // percent=100-percent;
-    
-    //seconds.style.top=percent+'%';
-    
     setTimeout(clockFunctionality,1000);
     };
 
@@ -382,13 +363,11 @@ setTimeout(loadWeather, 1000);
 setTimeout(loadDoc, 1000);
 setTimeout(loadSubwayData, 1000);
 setTimeout(reloadIFrame, 1000);
-// setTimeout(refreshClock, 1000); 
 setTimeout(clockFunctionality, 1000);
 
 </script>
 </head>
 <body translate="no">
-<!-- <div class="packagesTitle">Packages</div> -->
 <div class="moreDetails">For more subway details, please visit https://citymapper.com/nyc/status</div>
 
 <div class="mapDiv">
@@ -397,11 +376,6 @@ setTimeout(clockFunctionality, 1000);
 </div>
 
 <div id="weatherBox">
-<!-- <div class="clock">
-<div id="hour" class="hand hour"></div>
-<div id="minute" class="hand minute"></div>
-<div id="second" class="hand second"></div>
-</div> -->
 <div id="clock-case" class="clock-case">
     <div id="clock-case-hour" class="hour"></div>
     <div id="clock-case-minutes" class="minutes"></div>
