@@ -124,38 +124,43 @@ function loadDoc() {
             var counterA = 0;
             var counterB = 0;
             var counterC = 0;
-            var objs = doc.getElementsByClassName("PackagesDiv")[0].getElementsByTagName("table");
-            for(var j=0;j<objs.length;j++) {
-                for(var i=0;i<objs[j].rows.length;i++) {
-                    for(var k=0;k<objs[j].rows[i].cells.length;k++) {
-                        var t = objs[j].rows[i].cells[k].innerHTML.trim();
-                        if (t[0] == "A") {
-                            tempA = tempA + t + " ";
-                            counterA++;
-                            if(counterA%PACKAGES_PER_LINE == 0) {
-                                htmlA = htmlA + "<div class='item'><div class='item_name_packages'>"+tempA+"</div></div>";
-                                tempA = "";
-                                }
-                            }    
-                        else if (t[0] == "B") {
-                            tempB = tempB + t + " ";
-                            counterB++;
-                            if(counterB%PACKAGES_PER_LINE == 0) {
-                                htmlB = htmlB + "<div class='item'><div class='item_name_packages'>"+tempB+"</div></div>";
-                                tempB = "";
-                                }  
-                            }  
-                        else {
-                            tempC = tempC + t + " ";
-                            counterC++;
-                            if(counterC%PACKAGES_PER_LINE == 0) {
-                                htmlC = htmlC + "<div class='item'><div class='item_name_packages'>"+tempC+"</div></div>";
-                                tempC = "";
-                                }   
-                            }   
-                    }
-                }   
+            
+            for(var p=0;p<doc.getElementsByClassName("PackagesDiv").length;p++) {
+              var objs = doc.getElementsByClassName("PackagesDiv")[p].getElementsByTagName("table");
+              for(var j=0;j<objs.length;j++) {
+                  for(var i=0;i<objs[j].rows.length;i++) {
+                      for(var k=0;k<objs[j].rows[i].cells.length;k++) {
+                          var t = objs[j].rows[i].cells[k].innerHTML.trim();
+                          if (t[0] == "A") {
+                              tempA = tempA + t + " ";
+                              counterA++;
+                              if(counterA%PACKAGES_PER_LINE == 0) {
+                                  htmlA = htmlA + "<div class='item'><div class='item_name_packages'>"+tempA+"</div></div>";
+                                  tempA = "";
+                                  }
+                              }    
+                          else if (t[0] == "B") {
+                              tempB = tempB + t + " ";
+                              counterB++;
+                              if(counterB%PACKAGES_PER_LINE == 0) {
+                                  htmlB = htmlB + "<div class='item'><div class='item_name_packages'>"+tempB+"</div></div>";
+                                  tempB = "";
+                                  }  
+                              }  
+                          else {
+                              tempC = tempC + t + " ";
+                              counterC++;
+                              if(counterC%PACKAGES_PER_LINE == 0) {
+                                  htmlC = htmlC + "<div class='item'><div class='item_name_packages'>"+tempC+"</div></div>";
+                                  tempC = "";
+                                  }   
+                              }   
+                      }
+                  }   
+              }
             }
+            
+            
             htmlA = htmlA + "<div class='item'><div class='item_name_packages'>"+tempA+"</div></div>";
             htmlB = htmlB + "<div class='item'><div class='item_name_packages'>"+tempB+"</div></div>";
             htmlC = htmlC + "<div class='item'><div class='item_name_packages'>"+tempC+"</div></div>";
